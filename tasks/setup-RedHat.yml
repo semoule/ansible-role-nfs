@@ -8,7 +8,13 @@
     state: "{{ nfs_rpcbind_state }}"
     enabled: "{{ nfs_rpcbind_enabled }}"
 
-- name: Enable nfsidmap if enabled
+- name: get nfsidmap current status
+  shell: "cat /sys/module/nfsd/parameters/nfs4_disable_idmapping"
+  register: nfs_idmap_status
+  changed_when: False
+  when: nfs_idmap_enable == True
+
+- name: Enable nfsidmap if needed
   become: True
   shell: "echo N > /sys/module/nfsd/parameters/nfs4_disable_idmapping"
-  when: nfs_idmap_enable == True
+  when: nfs_idmap_enable == True and nfs_idmap_status.stdout != 'N'
