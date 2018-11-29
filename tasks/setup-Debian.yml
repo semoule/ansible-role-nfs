@@ -5,3 +5,8 @@
       - nfs-common
       - nfs-kernel-server
     state: present
+
+- name: Enable nfsidmap if enabled
+  become: True
+  shell: "echo N > /sys/module/nfs/parameters/nfs4_disable_idmapping"
+  when: nfs_idmap_enable == True
