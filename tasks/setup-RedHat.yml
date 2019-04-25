@@ -2,6 +2,21 @@
 - name: Ensure NFS utilities are installed.
   package: name=nfs-utils state=present
 
+- name: create module file if necessary
+  file:
+    path: /etc/modprobe.d/nfs.conf
+    state: touch
+    modification_time: "preserve"
+    access_time: "preserve"
+
+# /sys/module/nfsd/parameters/nfs4_disable_idmapping=N
+- name: Ensure nfs4 idmap is enabled
+  lineinfile:
+    dest: /etc/modprobe.d/nfs.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items: "{{ nfs_module_conf }}"
+
 - name: Ensure rpcbind is running as configured.
   service:
     name: rpcbind

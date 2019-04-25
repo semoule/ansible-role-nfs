@@ -3,3 +3,7 @@ nfs_exports: []
 
 nfs_rpcbind_state: started
 nfs_rpcbind_enabled: true
+
+nfs_module_conf:
+  - regexp: 'options nfsd nfs4_disable_idmapping='
+    line: options nfsd nfs4_disable_idmapping=N
